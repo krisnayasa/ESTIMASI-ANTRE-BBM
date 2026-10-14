@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hitung Antrean BBM Bali</title>
+<style>
+:root{--red:#d71920;--red-d:#a80f15;--bg:#fff;--bg2:#fff5f5;--card:#fff;--tx:#1f1f1f;--mut:#6b6b6b;--line:#f1d0d2;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#171212;--bg2:#211717;--card:#241a1a;--tx:#f4eeee;--mut:#b5a7a7;--line:#4a2c2e}}
+:root[data-theme="dark"]{--bg:#171212;--bg2:#211717;--card:#241a1a;--tx:#f4eeee;--mut:#b5a7a7;--line:#4a2c2e}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;padding-bottom:calc(64px + env(safe-area-inset-bottom,0px))}
+header{background:var(--red);color:#fff;padding:28px 20px 56px;text-align:center}
+header h1{margin:0;font-size:clamp(22px,5vw,32px);letter-spacing:-.5px}
+header p{margin:6px 0 0;opacity:.9;font-size:14px}
+main{max-width:520px;margin:-36px auto 0;padding:0 16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 8px 24px rgba(215,25,32,.12)}
+.tabs{display:grid;grid-template-columns:1fr 1fr;background:var(--bg2);border-radius:12px;padding:4px;gap:4px}
+.tabs button{border:0;background:transparent;color:var(--mut);padding:10px;border-radius:9px;font-weight:600;font-size:14px;cursor:pointer}
+.tabs button.on{background:var(--red);color:#fff}
+label{display:block;margin:18px 0 8px;font-size:14px;font-weight:600}
+.field{display:flex;align-items:center;border:2px solid var(--line);border-radius:12px;overflow:hidden;background:var(--bg)}
+.field:focus-within{border-color:var(--red)}
+.field input{flex:1;min-width:0;border:0;outline:0;background:transparent;color:var(--tx);font-size:22px;font-weight:700;padding:12px 14px}
+.field span{padding:0 14px;color:var(--mut);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.chips button{border:1px solid var(--line);background:var(--bg);color:var(--tx);border-radius:99px;padding:6px 14px;font-size:13px;cursor:pointer}
+.chips button:hover{border-color:var(--red);color:var(--red)}
+.result{margin-top:20px;background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:18px;text-align:center}
+.result small{color:var(--mut);font-size:13px}
+.big{font-size:clamp(44px,12vw,60px);font-weight:800;color:var(--red);line-height:1.1;margin:4px 0}
+.big em{font-size:.35em;font-style:normal;font-weight:700;margin-left:4px}
+.sub{font-size:14px;color:var(--mut)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.grid div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px}
+.grid b{display:block;font-size:17px}
+.grid span{font-size:12px;color:var(--mut)}
+.note{margin:16px 4px 0;font-size:12px;color:var(--mut);text-align:center;line-height:1.5}
+.hide{display:none}
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--red);color:#fff;overflow:hidden;white-space:nowrap;padding:14px 0 calc(14px + env(safe-area-inset-bottom,0px));font-size:14px;font-weight:600;border-top:3px solid #fff}
+.track{display:inline-block;padding-left:100%;animation:run 38s linear infinite}
+.bar:hover .track{animation-play-state:paused}
+@keyframes run{to{transform:translateX(-100%)}}
+@media (prefers-reduced-motion:reduce){.track{animation-duration:120s}}
+</style>
+</head>
+<body>
+<header>
+  <h1>⛽ Hitung Antrean BBM Bali</h1>
+  <p>Biar tahu, mau antre atau mau pulang jalan kaki.</p>
+</header>
+<main>
+  <div class="card">
+    <div class="tabs">
+      <button id="t1" class="on" type="button">Jumlah Motor</button>
+      <button id="t2" type="button">Panjang Antrean</button>
+    </div>
+
+    <div id="p1">
+      <label for="n">Sisa motor di depan kamu</label>
+      <div class="field"><input id="n" type="number" inputmode="numeric" min="0" placeholder="0" value="10"><span>motor</span></div>
+      <div class="chips" data-for="n"><button type="button" data-v="5">5</button><button type="button" data-v="10">10</button><button type="button" data-v="25">25</button><button type="button" data-v="50">50</button></div>
+    </div>
+
+    <div id="p2" class="hide">
+      <label for="m">Panjang antrean (dari ujung belakang sampai pompa)</label>
+      <div class="field"><input id="m" type="number" inputmode="decimal" min="0" step="0.1" placeholder="0" value="50"><span>meter</span></div>
+      <div class="chips" data-for="m"><button type="button" data-v="20">20 m</button><button type="button" data-v="50">50 m</button><button type="button" data-v="100">100 m</button><button type="button" data-v="300">300 m</button></div>
+    </div>
+
+    <div class="result">
+      <small>Perkiraan waktu tunggu sampai giliranmu</small>
+      <div class="big" id="out">0<em>menit</em></div>
+      <div class="sub" id="detail"></div>
+      <div class="grid">
+        <div><b id="cnt">0</b><span>motor di depan</span></div>
+        <div><b id="eta">--:--</b><span>giliranmu mulai (WITA)</span></div>
+        <div><b id="done">--:--</b><span>selesai isi (WITA)</span></div>
+        <div><b id="len">0 m</b><span>panjang antrean</span></div>
+      </div>
+    </div>
+    <p class="note">Asumsi: 1 motor diisi 1 menit 10 detik, panjang 1,9 m per motor. Hasil hanya perkiraan, kenyataan di lapangan bisa lebih "seru".</p>
+  </div>
+</main>
+
+<div class="bar" aria-label="Kalimat sarkas"><div class="track" id="mq"></div></div>
+
+<script>
+(function(){
+var T=70,L=1.9,mode=1;
+var $=function(i){return document.getElementById(i)};
+var quotes=[
+"Antre 2 jam demi hemat Rp 500 per liter? Matematika yang menarik.",
+"Tenang, bensin pasti habis duluan di antrean, bukan di pom.",
+"Jangan lupa bawa bantal, siapa tahu antrenya sampai besok.",
+"Mesin dimatikan itu hemat, dorong motor itu olahraga gratis.",
+"Yang sabar disayang Tuhan, yang serobot disayang bapak-bapak di belakang.",
+"Pom bensin jadi tempat reuni, ketemu mantan, tetangga, dan sesama korban.",
+"Antre BBM di Bali: wisata kuliner sambil menikmati knalpot.",
+"Isi bensin cuma 1 menit, antrenya yang bikin hidup terasa panjang."
+];
+$("mq").textContent=quotes.join("   ⛽   ")+"   ⛽   ";
+function two(x){return (x<10?"0":"")+x}
+function clock(d){
+  var u=d.getTime()+d.getTimezoneOffset()*60000+8*3600000;
+  var w=new Date(u);return two(w.getHours())+":"+two(w.getMinutes());
+}
+function fmt(sec){
+  var h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=Math.round(sec%60);
+  var p=[];if(h)p.push(h+" jam");if(m)p.push(m+" menit");if(s||!p.length)p.push(s+" detik");
+  return p.join(" ");
+}
+function calc(){
+  var n;
+  if(mode===1){n=Math.max(0,Math.floor(parseFloat($("n").value)||0));}
+  else{var m=Math.max(0,parseFloat($("m").value)||0);n=Math.ceil(m/L-1e-9);}
+  var sec=n*T,meters=n*L;
+  var mins=Math.round(sec/60);
+  $("out").innerHTML=mins+"<em>menit</em>";
+  $("detail").textContent=n?"≈ "+fmt(sec)+" ("+n+" × 1 mnt 10 dtk)":"Kosong! Langsung gas.";
+  $("cnt").textContent=n.toLocaleString("id-ID");
+  $("len").textContent=meters.toLocaleString("id-ID",{maximumFractionDigits:1})+" m";
+  var now=new Date();
+  $("eta").textContent=clock(new Date(now.getTime()+sec*1000));
+  $("done").textContent=clock(new Date(now.getTime()+(sec+T)*1000));
+}
+function setMode(x){
+  mode=x;
+  $("t1").classList.toggle("on",x===1);$("t2").classList.toggle("on",x===2);
+  $("p1").classList.toggle("hide",x!==1);$("p2").classList.toggle("hide",x!==2);
+  calc();
+}
+$("t1").onclick=function(){setMode(1)};
+$("t2").onclick=function(){setMode(2)};
+$("n").oninput=calc;$("m").oninput=calc;
+Array.prototype.forEach.call(document.querySelectorAll(".chips button"),function(b){
+  b.onclick=function(){$(b.parentNode.getAttribute("data-for")).value=b.getAttribute("data-v");calc()};
+});
+calc();
+})();
+</script>
+</body>
+</html>
